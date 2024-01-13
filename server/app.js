@@ -11,6 +11,8 @@ const session = require("express-session");
 const verifyJWT = require("./middleware/verfiyJwt");
 const connectDB = require("./config/DBconnection");
 const googleRouter = require("./routes/googleLogin");
+// const { GrantType, KindeClient } = require("@kinde-oss/kinde-nodejs-sdk");
+
 const PORT = process.env.PORT || 3500;
 
 //connect to mongodb
@@ -41,10 +43,32 @@ passport.deserializeUser(function (obj, cb) {
   cb(null, obj);
 });
 
-//routes
-app.get("/", (req, res) => {
-  res.send('<a href="/auth/google">authenticate with google</a>');
-});
+// const options = {
+//   domain: process.env.KINDE_DOMAIN,
+//   clientId: process.env.KINDE_CLIENT_ID,
+//   clientSecret: process.env.KINDE_CLIENT_SECRET,
+//   redirectUri: process.env.KINDE_REDIRECT_URI,
+//   logoutRedirectUri: process.env.KINDE_LOGOUT_REDIRECT_URI,
+//   grantType: GrantType.PKCE,
+// };
+
+// const kindeClient = new KindeClient(options);
+// //routes
+// app.get("/", (req, res) => {
+//   res.send('<a href="/login">authenticate with google</a>');
+// });
+
+// app.get("/login", kindeClient.login(), (req, res) => {
+//   return res.redirect("/admin");
+// });
+
+// app.get("/callback", kindeClient.callback(), async (req, res) => {
+//   return res.redirect("/admin");
+// });
+
+// app.get("/register", kindeClient.register(), (req, res) => {
+//   return res.redirect("/admin");
+// });
 
 app.use("/auth/google", googleRouter);
 app.use("/register", require("./routes/register"));

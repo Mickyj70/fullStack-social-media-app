@@ -33,6 +33,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/auth/google/error" }),
   (req, res) => {
     res.redirect("/auth/google/success"); // Successful authentication, redirect success.
+    // res.redirect("/user/blog"); // Successful authentication, redirect success.
   }
 );
 
@@ -40,7 +41,7 @@ router.get("/success", async (req, res) => {
   const { failure, success } = await googleAuth.registerWithGoogle(userProfile);
   if (failure) console.log("Google user already exist in DB..");
   else console.log("Registering new Google user..");
-  res.render("success", { user: userProfile });
+  res.status(200).send({ success: true, user: userProfile });
 });
 
 router.get("/error", (req, res) => res.send("Error logging in via Google.."));
