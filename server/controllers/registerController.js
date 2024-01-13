@@ -22,6 +22,7 @@ const handleNewUser = async (req, res) => {
       email: req.body.email,
       password: hashedPwd,
       confirmPassword: hashedPwd,
+      blogs: [],
     });
     res.status(201).json({ success: `New user ${username} created!` });
     res.redirect("/login");
@@ -30,4 +31,13 @@ const handleNewUser = async (req, res) => {
   }
 };
 
-module.exports = { handleNewUser };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { handleNewUser, getAllUsers };

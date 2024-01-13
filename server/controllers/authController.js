@@ -12,7 +12,7 @@ const handleLogin = async (req, res) => {
   const foundEmail = await User.findOne({ email: email }).exec();
   if (!foundEmail) return res.sendStatus(401); //Unauthorized
   // evaluate password
-  const match = await bcrypt.compare(password, foundEmail.password);
+  const match = bcrypt.compare(password, foundEmail.password);
   if (match) {
     // create JWTs
     const accessToken = jwt.sign(

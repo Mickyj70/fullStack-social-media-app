@@ -49,6 +49,7 @@ app.get("/", (req, res) => {
 app.use("/auth/google", googleRouter);
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/auth"));
+app.use("/user/blog", require("./routes/blog"));
 
 app.use(verifyJWT);
 
