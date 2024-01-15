@@ -74,6 +74,7 @@ app.use("/auth/google", googleRouter);
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/auth"));
 app.use("/user/blog", require("./routes/blog"));
+app.use("/logout", require("./routes/logout"));
 
 app.use(verifyJWT);
 

@@ -25,7 +25,7 @@ const handleNewUser = async (req, res) => {
       blogs: [],
     });
     res.status(201).json({ success: `New user ${username} created!` });
-    res.redirect("/login");
+    // res.redirect("/login");
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
