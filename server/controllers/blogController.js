@@ -1,96 +1,124 @@
+const mongoose = require("mongoose");
+
 const Blog = require("../model/Blog");
 const User = require("../model/User");
 
 //get all blogs uploaded
-const getAllBlogs = async (req, res, next) => {
+const getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
     res.status(200).json(blogs);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
+//add blog
 //add blog by user
-const addBlog = async (req, res, next) => {
-  const { title, description, image, user } = req.body;
-  let existingUser = await User.findById(user);
-  if (!existingUser) {
-    return res.status(400).json({ message: "User not found" });
-  }
-  const blog = new Blog({
-    title,
-    description,
-    image,
-    user,
-  });
+const addBlog = async (req, res) => {
+  const { title, description, image, userId } = req.body;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const session = await Mongoose.startSession();
-    session.startTransaction();
-    await blog.save({ session });
-    existingUser.blogs.push(blog);
-    await existingUser.save({ session });
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const blog = await Blog.create({
+      title,
+      description,
+      image,
+      user: userId,
+    });
+
+    user.blogs.push(blog);
+    await user.save({ session });
     await session.commitTransaction();
+
+    res.status(201).json(blog);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    await session.abortTransaction();
+    res.status(400).json({ error: err.message });
+  } finally {
+    session.endSession();
   }
-  return res.status(201).json({ blog });
 };
 
 //update blog by user
-const updateBlog = async (req, res, next) => {
+const updateBlog = async (req, res) => {
   const { title, description } = req.body;
   const blogId = req.params.id;
-  let blog;
-  try {
-    blog = await Blog.findOneAndUpdate(blogId, {
-      title,
-      description,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-  if (!blog) {
-    res.status(500).json({ message: "unable to update the info" });
-  }
-  return res.status(200).json({ blog });
-};
 
-const deleteBlog = async (req, res, next) => {
-  const blogId = req.params.id;
   try {
-    const deletedBlog = await Blog.findByIdAndDelete(blogId).populate("user");
-    await deletedBlog.user.blogs.pull(deletedBlog);
-    await deletedBlog.user.save();
-    // const user = await User.findById(deletedBlog.user);
-    // user.blogs = user.blogs.filter((blog) => blog.id !== blogId);
-    // await user.save();
-
-    res.status(200).json(deletedBlog);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-//specific blog by id
-const getBlog = async (req, res, next) => {
-  const blogId = req.params.id;
-  try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      { title, description },
+      { new: true }
+    );
+    if (!blog) {
+      throw new Error("Blog not found");
+    }
     res.status(200).json(blog);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
-//get the specific blogs nd details of a user
-const getBlogsByUser = async (req, res, next) => {
-  const userId = req.params.id;
+// Delete blog
+const deleteBlog = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const blog = await Blog.findByIdAndDelete(id);
+
+    if (!blog) {
+      throw new Error("Blog not found");
+    }
+
+    const user = await User.findById(blog.user);
+    user.blogs.pull(blog);
+    await user.save();
+
+    res.status(200).json(blog);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Get blog by ID
+const getBlog = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const blog = await Blog.findById(id);
+
+    if (!blog) {
+      throw new Error("Blog not found");
+    }
+
+    res.status(200).json(blog);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Get blogs for user
+const getBlogsByUser = async (req, res) => {
+  const { userId } = req.params;
+
   try {
     const user = await User.findById(userId).populate("blogs");
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     res.status(200).json(user.blogs);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 

@@ -11,12 +11,10 @@ const blogSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
   },
   user: {
     type: mongoose.Types.ObjectId,
     ref: "User",
-    required: true,
   },
   timestamp: {
     type: Date,
