@@ -23,6 +23,7 @@
     "logger": "^0.0.1",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.8",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
   },

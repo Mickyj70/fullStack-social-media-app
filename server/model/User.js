@@ -43,12 +43,54 @@ const UserSchema = new mongoose.Schema({
       required: true,
     },
   ],
+
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+
+  dislikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   timestamp: {
     type: Date,
     default: Date.now,
   },
   refreshToken: String,
+
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
+UserSchema.methods.createPasswordResetToken = () => {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetExpires = Date.now() + 3600000; // 1 hour
+
+  return resetToken;
+};
 
 const User = mongoose.model("User", UserSchema);
 

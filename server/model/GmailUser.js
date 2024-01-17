@@ -31,6 +31,38 @@ const GmailSchema = new mongoose.Schema({
       required: true,
     },
   ],
+
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+
+  dislikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
+
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
   refreshToken: String,
   // facebookId: {
   //   type: String,
