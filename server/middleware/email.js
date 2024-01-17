@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const User = require("../model/User");
 
 const sendEmail = async (option) => {
   //create transporter
@@ -20,4 +21,4 @@ const sendEmail = async (option) => {
   await transport.sendMail(emailOptions);
 };
 
-module.exports = sendEmail;
+module.exports = { sendEmail };
