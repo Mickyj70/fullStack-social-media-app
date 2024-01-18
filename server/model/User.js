@@ -44,20 +44,6 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    },
-  ],
-
-  dislikes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    },
-  ],
-
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
