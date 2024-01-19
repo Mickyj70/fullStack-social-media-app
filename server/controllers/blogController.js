@@ -122,6 +122,22 @@ const getBlogsByUser = async (req, res) => {
   }
 };
 
+//like user blog
+// const likeUserBlog = async (req, res) => {
+//   try {
+//     const post = await Blog.findById(req.params.id);
+//     if (!post.likes.includes(req.body.userId)) {
+//       await post.updateOne({ $push: { likes: req.body.userId } });
+//       res.status(200).json("the post has been liked");
+//     } else {
+//       await post.updateOne({ $pull: { likes: req.body.userId } });
+//       res.status(200).json("the post has been disliked");
+//     }
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 module.exports = {
   getAllBlogs,
   addBlog,
@@ -129,4 +145,5 @@ module.exports = {
   deleteBlog,
   getBlog,
   getBlogsByUser,
+  //  likeUserBlog,
 };

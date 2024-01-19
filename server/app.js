@@ -74,6 +74,8 @@ app.use("/auth/google", googleRouter);
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/auth"));
 app.use("/post", require("./routes/blog"));
+app.use("/post", require("./routes/likeUserBlog"));
+app.use("/post", require("./routes/comment"));
 app.use("/logout", require("./routes/logout"));
 app.use("/users", require("./routes/user"));
 // app.use("/post", require("./routes/post"));

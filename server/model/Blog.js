@@ -21,13 +21,15 @@ const blogSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       default: [],
+      ref: "User",
     },
   ],
 
   dislikes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      default: "Post",
+      default: [],
+      ref: "User",
     },
   ],
 
