@@ -9,16 +9,23 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
 const verifyJWT = require("./middleware/verfiyJwt");
+const credentials = require("./middleware/credentials");
 const connectDB = require("./config/DBconnection");
 const googleRouter = require("./routes/googleLogin");
+const corsOptions = require("./config/corsoption");
+
 // const { GrantType, KindeClient } = require("@kinde-oss/kinde-nodejs-sdk");
 
 const PORT = process.env.PORT || 3500;
 
 //connect to mongodb
 connectDB();
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
 // Cross Origin Resource Sharing
-app.use(cors());
+app.use(cors(corsOptions));
 
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));

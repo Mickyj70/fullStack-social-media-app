@@ -20,7 +20,7 @@ exports.commentOnBlog = async (req, res) => {
 
     await blog.save();
 
-    return res.status(201).send("Comment added");
+    return res.status(201).json(newComment);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
