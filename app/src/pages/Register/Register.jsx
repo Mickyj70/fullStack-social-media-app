@@ -29,9 +29,32 @@ const Register = () => {
 export default Register;
 
 export const Login = ({ setOptions }) => {
+  const [formData, setFormData] = useState({});
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    //add request to db using the api
+    try {
+      const response = await fetch("http://localhost:3500/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+    //redirect after success
+  };
   return (
     <>
-      <form className="registerForm">
+      <form className="registerForm" onSubmit={handleSubmit}>
         <div className="formGroup">
           <label htmlFor="email">Email</label>
           <input
@@ -39,6 +62,7 @@ export const Login = ({ setOptions }) => {
             id="email"
             name="email"
             placeholder="Enter your email"
+            onChange={handleChange}
           />
         </div>
         <div className="formGroup">
@@ -48,6 +72,7 @@ export const Login = ({ setOptions }) => {
             id="password"
             name="password"
             placeholder="Enter your password"
+            onChange={handleChange}
           />
         </div>
 
